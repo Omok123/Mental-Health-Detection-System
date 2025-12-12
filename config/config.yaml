@@ -1,0 +1,37 @@
+# config/config.yaml
+# RAF-DB Multi-Attribute Configuration
+
+# Model
+model:
+  name: "rafdb-multi-attribute"
+  architecture: "resnet18"
+  checkpoint_path: "checkpoints/rafdb_multi_attribute_final.pth"
+  num_classes: 7
+
+# Emotions
+emotions:
+  - "surprise"
+  - "fear"
+  - "disgust"
+  - "happy"
+  - "sad"
+  - "angry"
+  - "neutral"
+
+# Data paths
+data:
+  test_dir: "data/test_organized"
+  sample_images_dir: "data/sample_images"
+
+# Evaluation
+evaluation:
+  batch_size: 32
+  use_correction: true  # Use multi-attribute correction
+
+# Output
+output:
+  results_dir: "results"
+  plots_dir: "results/plots"
+
+# Device
+device: "cpu"

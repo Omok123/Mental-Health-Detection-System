@@ -1,0 +1,70 @@
+# ===== SECRETS & ENVIRONMENT =====
+.env
+.streamlit/secrets.toml
+
+# ===== PYTHON CACHE =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+src/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ===== MODEL CHECKPOINTS (TOO LARGE) =====
+checkpoints/*.pth
+checkpoints/*.pt
+checkpoints/*.ckpt
+!checkpoints/.gitkeep
+
+# ===== JUPYTER NOTEBOOKS =====
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ===== RESULTS & OUTPUTS =====
+results/*.csv
+results/*.json
+results/plots/*.png
+!results/.gitkeep
+!results/plots/.gitkeep
+
+# ===== DATASET IMAGES (TOO LARGE) =====
+data/sample_images/*.jpg
+data/sample_images/*.jpeg
+data/sample_images/*.png
+data/test/**/*.jpg
+data/test/**/*.jpeg
+!data/sample_images/.gitkeep
+!data/test/.gitkeep
+
+# ===== TEMPORARY FILES =====
+temp_*
+*.tmp
+*.log
+
+# ===== DOCUMENTS (PERSONAL/DRAFTS) =====
+*.docx
+*.pdf
+*.html
+!README.md
+
+# ===== IDE & EDITOR =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.code-workspace
+
+# ===== OS FILES =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== BUILD & DISTRIBUTION =====
+build/
+dist/
+*.egg-info/

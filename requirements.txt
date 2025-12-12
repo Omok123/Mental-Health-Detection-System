@@ -1,0 +1,31 @@
+# Core
+torch>=2.0.0
+torchvision>=0.15.0
+pillow>=10.0.0
+numpy>=1.24.0
+plotly>=5.17.0
+
+# Data handling
+pandas>=2.0.0
+pyyaml>=6.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Evaluation
+scikit-learn>=1.3.0
+tqdm>=4.65.0
+
+# Optional (for Gradio web interface)
+gradio>=4.0.0
+
+# For any CV utils, but optional with MTCNN
+#opencv-python 
+
+# For MTCNN
+#facenet-pytorch  
+
+#UIUX
+streamlit>=1.28.0
+groq>=0.4.0
