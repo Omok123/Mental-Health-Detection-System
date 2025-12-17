@@ -1,7 +1,7 @@
 # streamlit_app.py
 """
 Mental Health Detection & Support System
-Streamlit Web Application
+Streamlit Web Application - UPDATED FOR HUGGING FACE DEPLOYMENT
 """
 import streamlit as st
 import os
@@ -28,6 +28,14 @@ try:
     GROQ_AVAILABLE = True
 except ImportError:
     GROQ_AVAILABLE = False
+
+# Try to import Hugging Face Hub
+try:
+    from huggingface_hub import hf_hub_download
+    HF_HUB_AVAILABLE = True
+except ImportError:
+    HF_HUB_AVAILABLE = False
+    st.warning("⚠️ huggingface-hub not installed. Add to requirements.txt: huggingface-hub")
 
 # Get API key from environment or Streamlit secrets
 GROQ_API_KEY = os.getenv('GROQ_API_KEY') or st.secrets.get("GROQ_API_KEY", None)
@@ -281,18 +289,97 @@ def cleanup_temp_files():
 
 atexit.register(cleanup_temp_files)
 
+def download_model_from_hf():
+    """
+    Download model from Hugging Face Hub
+    
+    Returns:
+        Path to downloaded model checkpoint or None if failed
+    """
+    if not HF_HUB_AVAILABLE:
+        st.error("❌ huggingface-hub package not installed")
+        return None
+    
+    try:
+        # Create checkpoints directory if it doesn't exist
+        os.makedirs('checkpoints', exist_ok=True)
+        
+        checkpoint_path = 'checkpoints/rafdb_multi_attribute_final.pth'
+        
+        # Check if model already exists locally
+        if os.path.exists(checkpoint_path):
+            st.success("✅ Model found locally")
+            return checkpoint_path
+        
+        # Download from Hugging Face Hub
+        with st.spinner("📥 Downloading model from Hugging Face... This may take a minute."):
+            try:
+                model_path = hf_hub_download(
+                    repo_id="Omok123/rafdb-multi-attribute-model",
+                    filename="rafdb_multi_attribute_final.pth",
+                    cache_dir="./hf_cache"
+                )
+                
+                # Copy to checkpoints directory for easier access
+                import shutil
+                shutil.copy(model_path, checkpoint_path)
+                
+                st.success("✅ Model downloaded successfully!")
+                return checkpoint_path
+                
+            except Exception as download_error:
+                st.error(f"❌ Failed to download from Hugging Face: {download_error}")
+                st.info("💡 Make sure your model is uploaded to: https://huggingface.co/Omok123/rafdb-multi-attribute-model")
+                return None
+    
+    except Exception as e:
+        st.error(f"❌ Error in download_model_from_hf: {e}")
+        return None
+
 @st.cache_resource
 def load_emotion_model():
-    """Load emotion detection model (cached)"""
+    """
+    Load emotion detection model (cached)
+    
+    Tries multiple sources:
+    1. Local checkpoints/ directory
+    2. Hugging Face Hub download
+    
+    Returns:
+        EmotionPredictor instance or None if failed
+    """
     try:
+        # First, try to find model locally
+        local_checkpoint = 'checkpoints/rafdb_multi_attribute_final.pth'
+        
+        if os.path.exists(local_checkpoint):
+            st.info("📂 Loading model from local checkpoint...")
+            checkpoint_path = local_checkpoint
+        else:
+            st.info("🌐 Model not found locally. Attempting download from Hugging Face...")
+            checkpoint_path = download_model_from_hf()
+            
+            if checkpoint_path is None:
+                st.error("❌ Failed to load model from any source")
+                st.error("Please ensure:")
+                st.error("1. Model is uploaded to Hugging Face: Omok123/rafdb-multi-attribute-model")
+                st.error("2. File name is: rafdb_multi_attribute_final.pth")
+                st.error("3. Model repo is public or you have access")
+                return None
+        
+        # Load the model using EmotionPredictor
         predictor = EmotionPredictor(
-            checkpoint_path='checkpoints/rafdb_multi_attribute_final.pth',
+            checkpoint_path=checkpoint_path,
             model_name='resnet18',
             device='cpu'
         )
+        
+        st.success("✅ Model loaded successfully!")
         return predictor
+        
     except Exception as e:
-        st.error(f"Error loading model: {e}")
+        st.error(f"❌ Error loading model: {e}")
+        st.exception(e)
         return None
 
 def initialize_llm(api_key):
@@ -418,7 +505,8 @@ def main():
         if st.session_state.predictor:
             st.success("✅ Model Ready")
         else:
-            st.error("❌ Model failed")
+            st.error("❌ Model failed to load")
+            st.info("💡 Check the main panel for detailed error messages")
             st.stop()
         
         st.markdown("---")
@@ -500,8 +588,6 @@ def main():
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # VAD Metrics - removed, shown in chart instead
-                
                 # Compact chart
                 st.plotly_chart(create_compact_chart(result['all_probabilities']), use_container_width=True, config={'displayModeBar': False})
             
@@ -537,7 +623,7 @@ def main():
                             st.rerun()
                 else:
                     st.warning("⚠️ AI Chat unavailable")
-                    st.info("Configure GROQ_API_KEY in .env file or Streamlit secrets")
+                    st.info("Configure GROQ_API_KEY in Space secrets")
         
         # Bottom Row: Insights (only if result exists)
         if st.session_state.current_result:
@@ -557,8 +643,6 @@ def main():
                 st.markdown("### 💡 Helpful Strategies")
                 for i, tip in enumerate(insights['tips'], 1):
                     st.markdown(f"**{i}.** {tip}")
-            
-            # Recent detections removed per user request
     
     # Tab 2: Analytics
     with tab2:
