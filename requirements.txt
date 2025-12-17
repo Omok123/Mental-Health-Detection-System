@@ -29,4 +29,4 @@ gradio>=4.0.0
 #UIUX
 streamlit>=1.28.0
 groq>=0.4.0
-huggingface-hub==0.20.0
+
