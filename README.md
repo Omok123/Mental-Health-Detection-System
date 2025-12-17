@@ -187,6 +187,7 @@ Improvements welcome! Areas for contribution:
 - Real-time video emotion recognition
 
 ---
+---
 title: Mental Health Detection App
 emoji: 🧠
 colorFrom: blue
@@ -195,5 +196,26 @@ sdk: streamlit
 sdk_version: 1.31.0
 app_file: streamlit_app.py
 pinned: false
+license: mit
+---
+
+# Mental Health Detection & Support System
+
+AI-powered emotion recognition system using deep learning.
+
+## Features
+- Real-time emotion detection (7 classes)
+- Multi-attribute analysis (valence, arousal, dominance)
+- AI chatbot for mental health support
+- Analytics dashboard
+
+## Model
+Uses fine-tuned ResNet18 on RAF-DB dataset with 81.45% accuracy.
+
+## Usage
+1. Upload facial image
+2. Click "Analyze"
+3. View emotion detection results
+4. Chat with AI assistant for support
 ---
 
