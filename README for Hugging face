@@ -1,0 +1,27 @@
+---
+title: Mental Health Detection App
+emoji: 🧠
+colorFrom: blue
+colorTo: purple
+sdk: streamlit
+sdk_version: 1.31.0
+app_file: streamlit_app.py
+pinned: false
+license: mit
+---
+
+# Mental Health Detection & Support System
+
+AI-powered emotion recognition system using deep learning to detect emotions from facial expressions.
+
+## Features
+- Real-time emotion detection from images
+- 7 emotion classes (happy, sad, angry, fear, surprise, disgust, neutral)
+- AI chatbot for mental health support
+- Analytics and insights
+
+## Usage
+1. Upload an image
+2. Click "Analyze" to detect emotions
+3. Chat with the AI assistant for support
+4. View analytics on your emotional patterns
