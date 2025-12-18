@@ -1,3 +1,16 @@
+---
+title: Mental Health Detection System App
+emoji: 🚀
+colorFrom: red
+colorTo: red
+sdk: docker
+app_port: 8501
+tags:
+  - streamlit
+pinned: false
+short_description: Streamlit template space
+---
+
 # RAF-DB Emotion Recognition System v2.0
 
 Multi-attribute emotion recognition system with state-of-the-art accuracy and confusion mitigation.
